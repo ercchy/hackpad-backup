@@ -1,3 +1,37 @@
+Google translate of the original text (at the bottom):
+
+Now g0v too many things to put hackpad, in addition to its own history hackpad function should additionally be backed up
+
+# Backup
+If g0v or open source related project, I can help backup. , Please contact me.
+ps if it is relatively large site, please open the admin to me, because hackpad to list uplodated pads to admin
+
+# Profile:
+( You can use # denotes comment)
+- Backup_list.txt
+  Line of a project to be backed up , for example g0v / *
+  * Is currently not supported not
+  Not the admin can, but less efficient , to loop all pads
+- Api_keys.txt
+  Hackpad used to access the api key, one per line , in the format as
+  [key] [secret] [site]
+
+# Api key
+In hackpad site settings can be found in Note The key is for each domain separately .
+
+# Use
+Set a good backup_list.txt with api_keys.txt, execution
+  python hackpad-backup.py
+To
+
+Program in data / [site] Directory Creation git repository, to padid.html as filename commit to git go .
+
+# Feature & limitation
+- Will be part of the historical versions of backup versions, but does not back up all versions , or too
+- If the entire pad is deleted , the backup program does not know that it will not be deleted before the backup version basket
+- The default backup in html format because this format to retain more information
+
+===
 現在 g0v 太多東西放 hackpad, 除了 hackpad 自己的 history 功能, 應該另外作備份
 
 # 備份
