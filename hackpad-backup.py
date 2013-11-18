@@ -264,6 +264,7 @@ def backup_site(site):
     """
     Creates handlers connection to hackpad site and storing data
     """
+    print site
     hackpad = Hackpad(site)
     storage = Storage(site)
 
