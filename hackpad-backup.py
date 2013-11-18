@@ -226,12 +226,38 @@ class Storage:
                    'version %(version)s\n' +
                    'authors %(authors)s\n') % dict(timestamp=t,
                                                    version=rev['endRev'],
-                                                   authors=','.join(rev['authors']),
-                                                   )
+                                                   authors=','.join(rev['authors']),)
 
             self._git_commit(padid, datestr, msg, content)
 
         self.data = []
+        logger.info('Backup finished')
+
+    def zip_data(self, zfn):
+        zip_cmd = 'zip -r %(path)s/%(file)s %(path)s -x *.git*' % {'path': self.base, 'file': zfn}
+        try:
+            console.debug('Ziping file: %s' % self.base)
+            subprocess.check_output(zip_cmd, shell=True)
+        except subprocess.CalledProcessError:
+            logger.error('Zipping of data file failed. Aborting...')
+            raise ValueError
+
+        return True
+
+    def upload_to_s3(self, region='us-west-2'):
+
+        localtime = time.localtime()
+        time_stamp = time.strftime("%Y%m%d_%H%M%S", localtime)
+        zfn = 'p2pu_%s.zip' % time_stamp
+
+        if self.zip_data(zfn):
+            upload_cmd = 'aws s3 cp %(path)s/%(file)s s3://p2pu-backup/hackpad/%(file)s --region %(region)s' % \
+                         {'path': self.base, 'file': zfn, 'region': region}
+            try:
+                console.debug('Uploading file: %s' % self.base)
+                subprocess.check_output(upload_cmd, shell=True)
+            except subprocess.CalledProcessError:
+                logger.error('Process for uploading file failed')
 
 
 def backup_site(site):
@@ -293,6 +319,7 @@ def backup_site(site):
         if g_out_of_order_commit:
             storage.commit()
     storage.commit()
+    storage.upload_to_s3()
 
 
 def run_backup():
