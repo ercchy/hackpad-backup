@@ -3,3 +3,4 @@ api_keys.txt
 .idea
 *.log
 tmp.txt
+data/
